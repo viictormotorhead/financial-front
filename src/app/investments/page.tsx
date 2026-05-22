@@ -1,5 +1,5 @@
-import { InvestmentsPageLayout } from "@/features/investments/components/investments-page-layout";
+import { InvestmentsPage } from "@/features/investments/components/investments-page";
 
-export default function InvestmentsPage() {
-  return <InvestmentsPageLayout />;
+export default function InvestmentsRoutePage() {
+  return <InvestmentsPage />;
 }

@@ -54,22 +54,18 @@ export function InvestmentsPageLayout({
             Filtros por tags
           </p>
           <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-            <ContentSlot className="min-h-[44px] flex-1 lg:min-h-[120px]">
-              {filters ?? <TagManager variant="filters" className="h-full w-full" />}
-            </ContentSlot>
+            <div className="min-w-0 flex-1">
+              {filters ?? <TagManager variant="filters" />}
+            </div>
             <div className="hidden shrink-0 lg:block">
-              {manageTagsAction ?? (
-                <TagManager
-                  variant="manage"
-                  className="h-9 min-w-[140px] rounded-lg"
-                />
-              )}
+              {manageTagsAction ?? <TagManager variant="manage" />}
             </div>
           </div>
         </section>
 
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1.15fr)_minmax(400px,1fr)] xl:grid-cols-[minmax(0,1.2fr)_minmax(480px,1fr)]">
           <LayoutCard
+            className="min-w-0"
             title="Crecimiento por inversión"
             subtitle="Ranking por % de valorización"
             footer={
@@ -89,23 +85,16 @@ export function InvestmentsPageLayout({
           <LayoutCard
             title="Distribución de inversiones"
             subtitle="Porcentaje del valor total"
-            footer={
-              <p className="text-xs text-zinc-400" data-slot="last-updated" />
-            }
+            className="min-w-0"
+            contentClassName="overflow-hidden px-4 py-5 sm:px-5 lg:px-6"
           >
-            <ContentSlot className="border-0 bg-transparent">
-              {distribution ?? (
-                <DistributionChart className="h-full min-h-[200px] w-full" />
-              )}
-            </ContentSlot>
+            {distribution ?? <DistributionChart className="min-w-0 w-full" />}
           </LayoutCard>
         </div>
 
         <section className="mt-4 hidden lg:block">
           <LayoutCard title="Mis tags">
-            <ContentSlot className="border-0 bg-transparent">
-              {tags ?? <TagManager variant="list" className="h-full w-full" />}
-            </ContentSlot>
+            {tags ?? <TagManager variant="list" />}
           </LayoutCard>
         </section>
       </div>

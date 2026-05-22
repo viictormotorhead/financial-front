@@ -69,7 +69,7 @@ export function CardContent({
   ...props
 }: Readonly<HTMLAttributes<HTMLDivElement> & { children: ReactNode }>) {
   return (
-    <div className={cn("min-h-0 flex-1 px-5 py-4", className)} {...props}>
+    <div className={cn("flex-1 px-5 py-4", className)} {...props}>
       {children}
     </div>
   );
@@ -97,6 +97,7 @@ type LayoutCardProps = Readonly<{
   footer?: ReactNode;
   children?: ReactNode;
   className?: string;
+  contentClassName?: string;
 }>;
 
 export function LayoutCard({
@@ -106,6 +107,7 @@ export function LayoutCard({
   footer,
   children,
   className,
+  contentClassName,
 }: LayoutCardProps) {
   return (
     <Card className={className}>
@@ -116,7 +118,7 @@ export function LayoutCard({
         </div>
         {headerAction}
       </CardHeader>
-      <CardContent>{children}</CardContent>
+      <CardContent className={contentClassName}>{children}</CardContent>
       {footer ? <CardFooter>{footer}</CardFooter> : null}
     </Card>
   );
