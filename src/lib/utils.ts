@@ -14,6 +14,12 @@ export function formatCurrency(
 }
 
 /** Shorter currency for tight UI (e.g. donut center). */
+export function formatPercent(value: number, options?: { showSign?: boolean }) {
+  const { showSign = true } = options ?? {};
+  const sign = showSign && value > 0 ? "+" : "";
+  return `${sign}${value.toFixed(1)}%`;
+}
+
 export function formatCurrencyCompact(
   amount: number,
   locale = "es-CO",

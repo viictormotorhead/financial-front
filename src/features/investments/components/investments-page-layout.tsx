@@ -3,27 +3,14 @@ import type { ReactNode } from "react";
 import { LayoutCard } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
+import {
+  MOCK_DISTRIBUTION,
+  MOCK_DISTRIBUTION_UPDATED_AT,
+  MOCK_PORTFOLIO_TOTAL,
+} from "../data/mock-distribution";
 import { DistributionChart } from "./distribution-chart";
 import { InvestmentGrowthList } from "./investment-growth-list";
 import { TagManager } from "./tag-manager";
-
-type SlotProps = Readonly<{
-  children?: ReactNode;
-  className?: string;
-}>;
-
-function ContentSlot({ children, className = "" }: SlotProps) {
-  return (
-    <div
-      className={cn(
-        "min-h-[120px] rounded-lg border border-dashed border-zinc-200 bg-zinc-50/50",
-        className,
-      )}
-    >
-      {children}
-    </div>
-  );
-}
 
 type InvestmentsPageLayoutProps = Readonly<{
   filters?: ReactNode;
@@ -31,6 +18,8 @@ type InvestmentsPageLayoutProps = Readonly<{
   growthRanking?: ReactNode;
   distribution?: ReactNode;
   tags?: ReactNode;
+  /** Muchas categorías: la card de distribución ocupa todo el ancho */
+  distributionDense?: boolean;
 }>;
 
 export function InvestmentsPageLayout({
@@ -39,6 +28,7 @@ export function InvestmentsPageLayout({
   growthRanking,
   distribution,
   tags,
+  distributionDense = false,
 }: InvestmentsPageLayoutProps) {
   return (
     <main className="flex-1 overflow-auto">
@@ -63,23 +53,21 @@ export function InvestmentsPageLayout({
           </div>
         </section>
 
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1.15fr)_minmax(400px,1fr)] xl:grid-cols-[minmax(0,1.2fr)_minmax(480px,1fr)]">
+        <div
+          className={cn(
+            "grid grid-cols-1 gap-4",
+            distributionDense
+              ? "lg:grid-cols-1"
+              : "lg:grid-cols-[minmax(0,1.15fr)_minmax(400px,1fr)] xl:grid-cols-[minmax(0,1.2fr)_minmax(480px,1fr)]",
+          )}
+        >
           <LayoutCard
             className="min-w-0"
             title="Crecimiento por inversión"
             subtitle="Ranking por % de valorización"
-            footer={
-              <p
-                className="text-center text-xs text-zinc-500"
-                data-slot="view-all-link"
-              />
-            }
+            contentClassName="px-4 py-2 sm:px-5 sm:py-3"
           >
-            <ContentSlot className="border-0 bg-transparent">
-              {growthRanking ?? (
-                <InvestmentGrowthList className="h-full min-h-[200px] w-full" />
-              )}
-            </ContentSlot>
+            {growthRanking ?? <InvestmentGrowthList className="w-full" />}
           </LayoutCard>
 
           <LayoutCard
@@ -88,7 +76,14 @@ export function InvestmentsPageLayout({
             className="min-w-0"
             contentClassName="overflow-hidden px-4 py-5 sm:px-5 lg:px-6"
           >
-            {distribution ?? <DistributionChart className="min-w-0 w-full" />}
+            {distribution ?? (
+              <DistributionChart
+                className="min-w-0 w-full"
+                data={MOCK_DISTRIBUTION}
+                total={MOCK_PORTFOLIO_TOTAL}
+                lastUpdated={MOCK_DISTRIBUTION_UPDATED_AT}
+              />
+            )}
           </LayoutCard>
         </div>
 

@@ -7,6 +7,8 @@ type DistributionDonutProps = Readonly<{
   totalValue: string;
   /** Full amount for tooltip when value is shown in compact form */
   title?: string;
+  /** Many slices — slightly larger ring area for readability */
+  dense?: boolean;
   className?: string;
 }>;
 
@@ -25,6 +27,7 @@ export function DistributionDonut({
   totalLabel,
   totalValue,
   title,
+  dense = false,
   className,
 }: DistributionDonutProps) {
   const gradient = buildConicGradient(data);
@@ -35,7 +38,10 @@ export function DistributionDonut({
   return (
     <div
       className={cn(
-        "relative size-[188px] shrink-0 sm:size-[200px] lg:size-[220px] xl:size-[240px]",
+        "relative shrink-0",
+        dense
+          ? "size-[200px] sm:size-[220px] lg:size-[240px]"
+          : "size-[188px] sm:size-[200px] lg:size-[220px] xl:size-[240px]",
         className,
       )}
     >
@@ -46,7 +52,10 @@ export function DistributionDonut({
         aria-label={`Distribución: ${ariaSummary}`}
       />
       <div
-        className="absolute left-1/2 top-1/2 size-[66%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-white shadow-[inset_0_0_0_1px_rgba(0,0,0,0.04)]"
+        className={cn(
+          "absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white shadow-[inset_0_0_0_1px_rgba(0,0,0,0.04)]",
+          dense ? "size-[62%]" : "size-[66%]",
+        )}
         aria-hidden
       />
       <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center px-3 text-center sm:px-3.5 lg:px-4">

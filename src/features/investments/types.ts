@@ -13,6 +13,19 @@ export type Investment = Readonly<{
   currentValue: number;
 }>;
 
+export type InvestmentGrowthItem = Readonly<{
+  id: string;
+  rank: number;
+  name: string;
+  ticker: string;
+  tagName: string;
+  tagColor?: InvestmentTag["color"];
+  valuationPercent: number;
+  currentValue: number;
+  /** Points for the sparkline (oldest → newest) */
+  trend: readonly number[];
+}>;
+
 export type InvestmentDistribution = Readonly<{
   label: string;
   percentage: number;
