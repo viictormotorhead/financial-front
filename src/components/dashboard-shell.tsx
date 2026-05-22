@@ -7,6 +7,7 @@ import { BottomNav } from "@/components/bottom-nav";
 import { Header } from "@/components/header";
 import { MobileDrawer } from "@/components/mobile-drawer";
 import { Sidebar } from "@/components/sidebar";
+import { InvestmentsMobileHeaderAction } from "@/features/investments/components/investments-mobile-header-action";
 
 type DashboardShellProps = Readonly<{
   children: ReactNode;
@@ -24,6 +25,11 @@ export function DashboardShell({ children }: DashboardShellProps) {
         <Header
           activePath={activePath}
           onMenuOpen={() => setMenuOpen(true)}
+          trailingAction={
+            activePath.startsWith("/investments") ? (
+              <InvestmentsMobileHeaderAction />
+            ) : undefined
+          }
         />
 
         <div className="flex min-h-0 flex-1 flex-col pb-[calc(4.5rem+env(safe-area-inset-bottom))] lg:pb-0">

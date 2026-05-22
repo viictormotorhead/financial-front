@@ -13,6 +13,25 @@ export type Investment = Readonly<{
   currentValue: number;
 }>;
 
+export type InvestmentMovementType =
+  | "contribution"
+  | "withdrawal"
+  | "purchase"
+  | "sale"
+  | "value_update"
+  | "dividend";
+
+export type InvestmentMovementTypeOption = Readonly<{
+  value: InvestmentMovementType;
+  label: string;
+}>;
+
+export type ManualInvestmentUpdate = Readonly<{
+  investmentId: string;
+  movementType: InvestmentMovementType;
+  amount: number;
+}>;
+
 export type InvestmentGrowthItem = Readonly<{
   id: string;
   rank: number;

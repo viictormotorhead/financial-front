@@ -5,8 +5,10 @@ import {
   MOCK_DISTRIBUTION_UPDATED_AT,
   MOCK_PORTFOLIO_TOTAL,
 } from "../data/mock-distribution";
+
 import { DistributionChart } from "./distribution-chart";
 import { InvestmentGrowthList } from "./investment-growth-list";
+import { InvestmentUpdateTriggerButton } from "./investment-update-trigger-button";
 import { InvestmentsPageLayout } from "./investments-page-layout";
 import { TagManager } from "./tag-manager";
 
@@ -14,6 +16,7 @@ export function InvestmentsPage() {
   return (
     <InvestmentsPageLayout
       distributionDense
+      titleAction={<InvestmentUpdateTriggerButton />}
       filters={<TagManager variant="filters" />}
       manageTagsAction={<TagManager variant="manage" />}
       growthRanking={<InvestmentGrowthList />}

@@ -15,6 +15,7 @@ import { TagManager } from "./tag-manager";
 type InvestmentsPageLayoutProps = Readonly<{
   filters?: ReactNode;
   manageTagsAction?: ReactNode;
+  titleAction?: ReactNode;
   growthRanking?: ReactNode;
   distribution?: ReactNode;
   tags?: ReactNode;
@@ -25,6 +26,7 @@ type InvestmentsPageLayoutProps = Readonly<{
 export function InvestmentsPageLayout({
   filters,
   manageTagsAction,
+  titleAction,
   growthRanking,
   distribution,
   tags,
@@ -33,10 +35,11 @@ export function InvestmentsPageLayout({
   return (
     <main className="flex-1 overflow-auto">
       <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6 sm:py-6 lg:px-8 lg:py-8">
-        <header className="mb-4 hidden lg:mb-6 lg:block">
-          <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">
+        <header className="relative z-10 mb-4 flex items-center justify-end gap-3 lg:mb-6 lg:justify-between">
+          <h1 className="hidden text-2xl font-semibold tracking-tight text-zinc-900 lg:block">
             Inversiones
           </h1>
+          {titleAction}
         </header>
 
         <section className="mb-4 lg:mb-6" aria-label="Tag filters">

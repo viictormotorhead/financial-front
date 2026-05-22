@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 
 import { DashboardShell } from "@/components/dashboard-shell";
 
+import { Providers } from "./providers";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -31,7 +32,9 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full font-sans antialiased">
-        <DashboardShell>{children}</DashboardShell>
+        <Providers>
+          <DashboardShell>{children}</DashboardShell>
+        </Providers>
       </body>
     </html>
   );

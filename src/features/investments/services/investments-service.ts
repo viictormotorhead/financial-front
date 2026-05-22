@@ -12,6 +12,7 @@ import type {
   InvestmentDistribution,
   InvestmentGrowthItem,
   InvestmentTag,
+  ManualInvestmentUpdate,
 } from "../types";
 
 // Placeholder service — connect to API / Server Actions
@@ -30,6 +31,13 @@ export async function getInvestments(): Promise<Investment[]> {
 
 export async function getGrowthRanking(): Promise<InvestmentGrowthItem[]> {
   return MOCK_GROWTH_RANKING;
+}
+
+export async function submitManualInvestmentUpdate(
+  payload: ManualInvestmentUpdate,
+): Promise<void> {
+  // Placeholder — POST to API / Server Action
+  console.info("[submitManualInvestmentUpdate]", payload);
 }
 
 export async function getInvestmentTags(): Promise<InvestmentTag[]> {
