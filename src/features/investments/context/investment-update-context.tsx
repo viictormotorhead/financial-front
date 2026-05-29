@@ -13,7 +13,6 @@ import {
 } from "react";
 
 import { useToast } from "@/components/ui/toast";
-import { MOCK_GROWTH_RANKING } from "../data/mock-investments";
 import { MOVEMENT_TYPE_OPTIONS } from "../data/movement-types";
 import { useOpenInvestmentUpdateModalListener } from "../hooks/use-open-investment-update-modal";
 import { submitManualInvestmentUpdate } from "../services/investments-service";
@@ -29,14 +28,11 @@ const InvestmentUpdateContext =
   createContext<InvestmentUpdateContextValue | null>(null);
 
 function buildSuccessMessage(payload: ManualInvestmentUpdate) {
-  const investment = MOCK_GROWTH_RANKING.find(
-    (item) => item.id === payload.investmentId,
-  );
   const movement = MOVEMENT_TYPE_OPTIONS.find(
     (option) => option.value === payload.movementType,
   );
 
-  const name = investment?.name ?? "la inversión";
+  const name = payload.investmentName || "la inversión";
   const movementLabel = movement?.label ?? "Movimiento";
 
   return `${movementLabel} de ${formatCurrency(payload.amount)} registrado en ${name}.`;
@@ -80,8 +76,12 @@ export function InvestmentUpdateProvider({
         await submitManualInvestmentUpdate(payload);
         toast.success(buildSuccessMessage(payload));
         setOpen(false);
-      } catch {
-        toast.error("No se pudo guardar la actualización. Intenta de nuevo.");
+      } catch (error) {
+        const message =
+          error instanceof Error && error.message
+            ? error.message
+            : "No se pudo guardar la actualización. Intenta de nuevo.";
+        toast.error(message);
       } finally {
         setIsSubmitting(false);
       }

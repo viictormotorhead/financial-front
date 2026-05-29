@@ -14,11 +14,17 @@ import { TagManager } from "./tag-manager";
 
 type InvestmentsPageLayoutProps = Readonly<{
   filters?: ReactNode;
+  /**
+   * Segunda acción en la cabecera (ej. nueva inversión), alineada con
+   * `titleAction` (ej. actualizar valor).
+   */
   manageTagsAction?: ReactNode;
   titleAction?: ReactNode;
   growthRanking?: ReactNode;
   distribution?: ReactNode;
   tags?: ReactNode;
+  /** Nombres de tags activos (para depuración / futura llamada al API) */
+  activeFilterNames?: string[];
   /** Muchas categorías: la card de distribución ocupa todo el ancho */
   distributionDense?: boolean;
 }>;
@@ -30,29 +36,42 @@ export function InvestmentsPageLayout({
   growthRanking,
   distribution,
   tags,
+  activeFilterNames = [],
   distributionDense = false,
 }: InvestmentsPageLayoutProps) {
   return (
     <main className="flex-1 overflow-auto">
       <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6 sm:py-6 lg:px-8 lg:py-8">
-        <header className="relative z-10 mb-4 flex items-center justify-end gap-3 lg:mb-6 lg:justify-between">
+        <header className="relative z-10 mb-4 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-end lg:mb-6 lg:justify-between">
           <h1 className="hidden text-2xl font-semibold tracking-tight text-zinc-900 lg:block">
             Inversiones
           </h1>
-          {titleAction}
+          <div
+            className="flex w-full flex-wrap items-stretch justify-end gap-2 sm:items-center lg:w-auto"
+            aria-label="Acciones de cartera"
+          >
+            {titleAction}
+            {manageTagsAction}
+          </div>
         </header>
 
-        <section className="mb-4 lg:mb-6" aria-label="Tag filters">
+        <section className="mb-4 lg:mb-6" aria-label="Filtros de inversiones">
           <p className="mb-2 text-xs font-medium text-zinc-600 lg:mb-3 lg:uppercase lg:tracking-wide lg:text-zinc-500">
-            Filtros por tags
+            Vista y filtros
           </p>
-          <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+          <div className="flex flex-col gap-4">
             <div className="min-w-0 flex-1">
+              <p className="mb-2 text-[11px] font-medium uppercase tracking-wide text-zinc-500">
+                Tags
+              </p>
               {filters ?? <TagManager variant="filters" />}
+              {activeFilterNames.length > 0 ? (
+                <p className="sr-only" aria-live="polite">
+                  Filtros activos: {activeFilterNames.join(", ")}
+                </p>
+              ) : null}
             </div>
-            <div className="hidden shrink-0 lg:block">
-              {manageTagsAction ?? <TagManager variant="manage" />}
-            </div>
+
           </div>
         </section>
 
@@ -67,10 +86,12 @@ export function InvestmentsPageLayout({
           <LayoutCard
             className="min-w-0"
             title="Crecimiento por inversión"
-            subtitle="Ranking por % de valorización"
+            subtitle="Ranking por % de crecimiento"
             contentClassName="px-4 py-2 sm:px-5 sm:py-3"
           >
-            {growthRanking ?? <InvestmentGrowthList className="w-full" />}
+            {growthRanking ?? (
+              <p className="py-6 text-sm text-zinc-500">Sin datos de inversiones.</p>
+            )}
           </LayoutCard>
 
           <LayoutCard
@@ -89,12 +110,6 @@ export function InvestmentsPageLayout({
             )}
           </LayoutCard>
         </div>
-
-        <section className="mt-4 hidden lg:block">
-          <LayoutCard title="Mis tags">
-            {tags ?? <TagManager variant="list" />}
-          </LayoutCard>
-        </section>
       </div>
     </main>
   );

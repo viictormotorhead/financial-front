@@ -1,15 +1,19 @@
+import { CURRENCY_CODE, CURRENCY_LOCALE } from "./currency";
+
 export function cn(...classes: (string | undefined | null | false)[]) {
   return classes.filter(Boolean).join(" ");
 }
 
 export function formatCurrency(
   amount: number,
-  locale = "es-CO",
-  currency = "USD",
+  locale = CURRENCY_LOCALE,
+  currency = CURRENCY_CODE,
 ) {
   return new Intl.NumberFormat(locale, {
     style: "currency",
     currency,
+    maximumFractionDigits: 0,
+    minimumFractionDigits: 0,
   }).format(amount);
 }
 
@@ -20,10 +24,17 @@ export function formatPercent(value: number, options?: { showSign?: boolean }) {
   return `${sign}${value.toFixed(1)}%`;
 }
 
+/** Variación monetaria con signo explícito (+ / −). */
+export function formatCurrencyDelta(amount: number) {
+  if (amount === 0) return formatCurrency(0);
+  const sign = amount > 0 ? "+" : "−";
+  return `${sign}${formatCurrency(Math.abs(amount))}`;
+}
+
 export function formatCurrencyCompact(
   amount: number,
-  locale = "es-CO",
-  currency = "USD",
+  locale = CURRENCY_LOCALE,
+  currency = CURRENCY_CODE,
 ) {
   const formatted = formatCurrency(amount, locale, currency);
   if (formatted.length <= 14) return formatted;

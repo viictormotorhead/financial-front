@@ -2,26 +2,25 @@
 
 import Link from "next/link";
 
-import { MOCK_GROWTH_RANKING } from "../data/mock-investments";
 import type { InvestmentGrowthItem } from "../types";
 import { cn } from "@/lib/utils";
 
 import { InvestmentGrowthRow } from "./investment-growth-row";
 
 type InvestmentGrowthListProps = Readonly<{
-  items?: InvestmentGrowthItem[];
+  items: InvestmentGrowthItem[];
   className?: string;
   limit?: number;
   showViewAll?: boolean;
 }>;
 
 export function InvestmentGrowthList({
-  items = MOCK_GROWTH_RANKING,
+  items,
   className,
-  limit = 5,
+  limit,
   showViewAll = true,
 }: InvestmentGrowthListProps) {
-  const visibleItems = items.slice(0, limit);
+  const visibleItems = limit ? items.slice(0, limit) : items;
 
   return (
     <div

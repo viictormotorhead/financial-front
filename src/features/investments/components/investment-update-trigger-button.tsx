@@ -43,10 +43,9 @@ export function InvestmentUpdateTriggerButton({
     <Button
       type="button"
       variant="outline"
-      size="sm"
       onClick={handleOpen}
       className={cn(
-        "relative z-10 min-h-11 shrink-0 cursor-pointer touch-manipulation",
+        "relative z-10 h-10 shrink-0 cursor-pointer touch-manipulation px-4",
         className,
       )}
       aria-label="Actualizar valor de inversión"

@@ -30,6 +30,7 @@ export function InvestmentManualUpdateModal({
       description="Registra un movimiento o actualiza el valor manualmente."
     >
       <InvestmentManualUpdateForm
+        open={open}
         onSubmit={handleSubmit}
         onCancel={onClose}
         isSubmitting={isSubmitting}

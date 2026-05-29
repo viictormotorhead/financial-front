@@ -2,6 +2,14 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
+Copia las variables de entorno y ajusta el host del backend si hace falta:
+
+```bash
+cp .env.example .env
+```
+
+En `.env`, `NEXT_PUBLIC_API_URL` debe apuntar a la base del API (incluye `/api`), por ejemplo `http://localhost:3010/api`.
+
 First, run the development server:
 
 ```bash

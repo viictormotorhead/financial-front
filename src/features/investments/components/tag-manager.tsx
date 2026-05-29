@@ -1,90 +1,120 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 
-import {
-  DEFAULT_ACTIVE_FILTER_IDS,
-  MOCK_TAGS,
-} from "../data/mock-tags";
-import type { InvestmentTag } from "../types";
 import { cn } from "@/lib/utils";
 
-import { ManageTagsButton } from "./manage-tags-button";
+import { useInvestmentTags } from "../context/investment-tags-context";
+import type { InvestmentTag } from "../types";
+
 import { TagList } from "./tag-list";
+import { TagPickerModal } from "./tag-picker-modal";
 
 type TagManagerProps = Readonly<{
   className?: string;
-  variant?: "filters" | "manage" | "list";
+  variant?: "filters" | "list";
+  /** Override API tags (e.g. Storybook/tests) */
   allTags?: InvestmentTag[];
-  initialFilterIds?: string[];
 }>;
+
+function TagFiltersSkeleton({ className }: Readonly<{ className?: string }>) {
+  return (
+    <div className={cn("flex flex-wrap gap-2", className)} aria-hidden>
+      {[1, 2, 3].map((key) => (
+        <span
+          key={key}
+          className="h-7 w-20 animate-pulse rounded-full bg-zinc-100"
+        />
+      ))}
+    </div>
+  );
+}
 
 export function TagManager({
   className = "",
   variant = "filters",
-  allTags = MOCK_TAGS,
-  initialFilterIds = DEFAULT_ACTIVE_FILTER_IDS,
+  allTags: allTagsOverride,
 }: TagManagerProps) {
-  const [tags, setTags] = useState(allTags);
-  const [activeFilterIds, setActiveFilterIds] = useState(initialFilterIds);
+  const {
+    tags: apiTags,
+    isLoading,
+    error,
+    refetch,
+    activeFilterTags,
+    activeFilterNames,
+    addFilters,
+    removeFilter,
+    availableTagsForPicker,
+  } = useInvestmentTags();
 
-  const filterTags = useMemo(
-    () => tags.filter((tag) => activeFilterIds.includes(tag.id)),
-    [tags, activeFilterIds],
-  );
+  const allTags = allTagsOverride ?? apiTags;
+  const [pickerOpen, setPickerOpen] = useState(false);
 
-  const handleRemoveFilter = (id: string) => {
-    setActiveFilterIds((current) => current.filter((tagId) => tagId !== id));
-  };
+  if (isLoading && !allTagsOverride) {
+    return <TagFiltersSkeleton className={className} />;
+  }
 
-  const handleRemoveTag = (id: string) => {
-    setTags((current) => current.filter((tag) => tag.id !== id));
-    setActiveFilterIds((current) => current.filter((tagId) => tagId !== id));
-  };
-
-  const handleAddFilter = () => {
-    const next = tags.find((tag) => !activeFilterIds.includes(tag.id));
-    if (next) setActiveFilterIds((current) => [...current, next.id]);
-  };
-
-  const handleAddTag = () => {
-    const id = `tag-${Date.now()}`;
-    setTags((current) => [
-      ...current,
-      { id, name: "Nuevo tag", color: "default" },
-    ]);
-  };
-
-  const handleManage = () => {
-    // Modal de gestión — próximo paso
-    console.info("[TagManager] Abrir gestión de tags");
-  };
-
-  if (variant === "manage") {
+  if (error && !allTagsOverride) {
     return (
-      <ManageTagsButton onClick={handleManage} className={className} />
+      <div className={cn("space-y-2", className)}>
+        <p className="text-sm text-red-600">{error}</p>
+        <button
+          type="button"
+          onClick={refetch}
+          className="text-sm font-medium text-blue-600 hover:text-blue-700"
+        >
+          Reintentar
+        </button>
+      </div>
     );
   }
 
   if (variant === "list") {
     return (
-      <TagList
-        tags={tags}
-        onRemove={handleRemoveTag}
-        onAddClick={handleAddTag}
-        addLabel="Nuevo tag"
-        className={className}
-      />
+      <section id="investment-tags-catalog" className={className}>
+        <TagList tags={allTags} />
+        {allTags.length === 0 ? (
+          <p className="mt-3 text-sm text-zinc-500">
+            No hay tags en el catálogo.
+          </p>
+        ) : null}
+      </section>
     );
   }
 
   return (
-    <TagList
-      tags={filterTags}
-      onRemove={handleRemoveFilter}
-      onAddClick={handleAddFilter}
-      addLabel="Agregar tag"
-      className={cn("py-0.5", className)}
-    />
+    <>
+      <TagList
+        tags={activeFilterTags}
+        onRemove={removeFilter}
+        onAddClick={
+          availableTagsForPicker.length > 0
+            ? () => setPickerOpen(true)
+            : undefined
+        }
+        addLabel="Agregar filtros"
+        className={cn("py-0.5", className)}
+      />
+      {activeFilterTags.length === 0 ? (
+        <p className="mt-2 text-xs text-zinc-500">
+          Sin filtros activos. Agrega uno para acotar inversiones por tag.
+        </p>
+      ) : (
+        <p className="mt-2 text-xs text-zinc-500">
+          Filtrando por:{" "}
+          <span className="font-medium text-zinc-700">
+            {activeFilterNames.join(", ")}
+          </span>
+        </p>
+      )}
+      <TagPickerModal
+        open={pickerOpen}
+        onClose={() => setPickerOpen(false)}
+        tags={availableTagsForPicker}
+        onConfirm={(selected) =>
+          addFilters(selected.map((tag) => tag.id))
+        }
+      />
+    </>
   );
 }

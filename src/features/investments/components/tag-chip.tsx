@@ -29,10 +29,15 @@ function CloseIcon({ className }: Readonly<{ className?: string }>) {
 }
 
 export function TagChip({ tag, onRemove, className }: TagChipProps) {
+  const title = tag.description
+    ? `${tag.name} · ${tag.description} (id ${tag.id})`
+    : `${tag.name} (id ${tag.id})`;
+
   return (
     <Badge
       variant={tag.color ?? "default"}
       className={cn("gap-1 pr-1.5", className)}
+      title={title}
     >
       <span>{tag.name}</span>
       {onRemove ? (
