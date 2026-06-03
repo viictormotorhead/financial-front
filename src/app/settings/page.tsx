@@ -1,3 +1,5 @@
+import { LogoutButton } from "@/features/auth/components/logout-button";
+
 export default function SettingsPage() {
   return (
     <main className="flex-1 overflow-auto">
@@ -5,10 +7,17 @@ export default function SettingsPage() {
         <h1 className="hidden text-2xl font-semibold tracking-tight text-zinc-900 lg:block">
           Configuración
         </h1>
-        <div
-          className="mt-4 min-h-[200px] rounded-lg border border-dashed border-zinc-200 bg-zinc-50/50"
-          data-slot="settings-content"
-        />
+
+        <section className="mt-6 max-w-md rounded-lg border border-zinc-200 bg-white p-6">
+          <h2 className="text-sm font-semibold text-zinc-900">Sesión</h2>
+          <p className="mt-1 text-sm text-zinc-500">
+            Cierra sesión en este dispositivo. Tendrás que volver a iniciar
+            sesión para ver tus datos.
+          </p>
+          <div className="mt-4">
+            <LogoutButton />
+          </div>
+        </section>
       </div>
     </main>
   );

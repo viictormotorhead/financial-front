@@ -8,7 +8,9 @@ Copia las variables de entorno y ajusta el host del backend si hace falta:
 cp .env.example .env
 ```
 
-En `.env`, `NEXT_PUBLIC_API_URL` debe apuntar a la base del API (incluye `/api`), por ejemplo `http://localhost:3010/api`.
+En `.env`, `API_URL` debe apuntar a la base del API (incluye `/api`), por ejemplo `http://localhost:3010/api`. Las peticiones del navegador pasan por el proxy de Next (`/api/backend`); el JWT se guarda en una cookie HttpOnly y no se expone al cliente.
+
+La pantalla de login está en `/login`. El backend debe exponer `POST /auth/login` con `{ username, password }` y devolver un JWT (`access_token` en el cuerpo o dentro de `data`).
 
 First, run the development server:
 

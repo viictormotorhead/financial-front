@@ -17,6 +17,10 @@ export function DashboardShell({ children }: DashboardShellProps) {
   const activePath = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
 
+  if (activePath === "/login") {
+    return <>{children}</>;
+  }
+
   return (
     <div className="flex min-h-screen bg-[#f8f9fa] text-zinc-900">
       <Sidebar activePath={activePath} className="hidden lg:flex" />
