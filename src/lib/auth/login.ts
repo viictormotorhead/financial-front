@@ -37,8 +37,15 @@ function extractAccessToken(body: unknown): string | null {
   if (fromRoot) return fromRoot;
 
   const data = record.data;
-  if (data && typeof data === "object") {
-    return tokenFromRecord(data as Record<string, unknown>);
+  if (!data || typeof data !== "object") return null;
+
+  const dataRecord = data as Record<string, unknown>;
+  const fromData = tokenFromRecord(dataRecord);
+  if (fromData) return fromData;
+
+  const auth = dataRecord.auth;
+  if (auth && typeof auth === "object") {
+    return tokenFromRecord(auth as Record<string, unknown>);
   }
 
   return null;
@@ -62,13 +69,13 @@ function extractExpiresInSec(payload: unknown): number | undefined {
 }
 
 /**
- * Autentica contra el backend (`POST /auth/login`).
- * Acepta respuesta plana o envuelta en `{ status, data }`.
+ * Autentica contra el backend (`POST /v1/auth/login`).
+ * Acepta respuesta plana o envuelta en `{ status, data }` / `{ status, data: { auth } }`.
  */
 export async function loginOnBackend(
   credentials: LoginCredentials,
 ): Promise<LoginSuccess> {
-  const url = `${getServerApiBaseUrl()}/auth/login`;
+  const url = `${getServerApiBaseUrl()}/v1/auth/login`;
   const response = await fetch(url, {
     method: "POST",
     headers: {
