@@ -160,6 +160,7 @@ export function InvestmentDetailPage({ investmentId }: InvestmentDetailPageProps
             >
               <InvestmentValueLineChart
                 series={detail.series}
+                currentValue={detail.currentValue}
                 positive={growthPositive}
               />
             </LayoutCard>
